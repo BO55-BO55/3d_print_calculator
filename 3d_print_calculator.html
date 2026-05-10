@@ -1,0 +1,349 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600&display=swap');
+  :root {
+    --bp-bg: #0a0f1e;
+    --bp-surface: #0d1526;
+    --bp-grid: rgba(56,130,246,0.08);
+    --bp-line: rgba(56,130,246,0.18);
+    --bp-accent: #3882f6;
+    --bp-accent2: #60a5fa;
+    --bp-text: #e0eaff;
+    --bp-muted: rgba(180,210,255,0.45);
+    --bp-card: rgba(22,40,80,0.7);
+    --bp-border: rgba(56,130,246,0.25);
+    --bp-selected: rgba(56,130,246,0.15);
+    --bp-white: #ffffff;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  #calc-root {
+    background: var(--bp-bg);
+    min-height: 480px;
+    font-family: 'Rajdhani', sans-serif;
+    color: var(--bp-text);
+    padding: 28px 24px 32px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+  }
+  #calc-root::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--bp-grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--bp-grid) 1px, transparent 1px);
+    background-size: 32px 32px;
+    pointer-events: none;
+  }
+  #calc-root::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--bp-accent);
+    box-shadow: 0 0 12px var(--bp-accent);
+  }
+  .bp-header {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 24px;
+    position: relative;
+  }
+  .bp-logo {
+    width: 32px; height: 32px;
+    border: 1.5px solid var(--bp-accent);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--bp-accent);
+    font-size: 17px;
+  }
+  .bp-title {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 15px;
+    letter-spacing: 0.12em;
+    color: var(--bp-accent2);
+    text-transform: uppercase;
+  }
+  .bp-subtitle {
+    font-size: 11px;
+    color: var(--bp-muted);
+    font-family: 'Share Tech Mono', monospace;
+    letter-spacing: 0.08em;
+    margin-left: auto;
+  }
+  .section-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    color: var(--bp-accent);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    opacity: 0.8;
+  }
+  .grid2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+  .field-block {
+    background: var(--bp-card);
+    border: 0.5px solid var(--bp-border);
+    border-radius: 8px;
+    padding: 12px 14px;
+  }
+  .field-label {
+    font-size: 11px;
+    color: var(--bp-muted);
+    font-family: 'Share Tech Mono', monospace;
+    letter-spacing: 0.1em;
+    margin-bottom: 6px;
+  }
+  .field-row {
+    display: flex; align-items: center; gap: 6px;
+  }
+  .bp-input {
+    background: rgba(10,20,50,0.8);
+    border: 0.5px solid var(--bp-border);
+    border-radius: 5px;
+    color: var(--bp-text);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 18px;
+    padding: 5px 8px;
+    width: 100%;
+    outline: none;
+    transition: border-color 0.2s;
+    -moz-appearance: textfield;
+  }
+  .bp-input::-webkit-outer-spin-button,
+  .bp-input::-webkit-inner-spin-button { -webkit-appearance: none; }
+  .bp-input:focus { border-color: var(--bp-accent); }
+  .field-unit {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: var(--bp-muted);
+    white-space: nowrap;
+  }
+  .filament-section { margin-bottom: 18px; }
+  .fil-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+  }
+  .fil-btn {
+    background: var(--bp-card);
+    border: 0.5px solid var(--bp-border);
+    border-radius: 8px;
+    padding: 10px 8px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.18s;
+    position: relative;
+  }
+  .fil-btn:hover { border-color: var(--bp-accent2); }
+  .fil-btn.active {
+    background: var(--bp-selected);
+    border-color: var(--bp-accent);
+    box-shadow: inset 0 0 0 0.5px var(--bp-accent);
+  }
+  .fil-name {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--bp-text);
+    line-height: 1.2;
+    margin-bottom: 3px;
+  }
+  .fil-price {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    color: var(--bp-muted);
+  }
+  .fil-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--bp-accent);
+    margin: 0 auto 5px;
+    opacity: 0;
+    transition: opacity 0.18s;
+  }
+  .fil-btn.active .fil-dot { opacity: 1; }
+  .divider {
+    border: none;
+    border-top: 0.5px solid var(--bp-line);
+    margin: 18px 0;
+  }
+  .result-section {
+    background: var(--bp-card);
+    border: 0.5px solid var(--bp-accent);
+    border-radius: 10px;
+    padding: 16px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .result-section::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: var(--bp-accent);
+    opacity: 0.5;
+  }
+  .result-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 0;
+  }
+  .result-row + .result-row {
+    border-top: 0.5px solid var(--bp-line);
+    margin-top: 6px;
+    padding-top: 10px;
+  }
+  .result-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--bp-muted);
+    text-transform: uppercase;
+  }
+  .result-val {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--bp-accent2);
+  }
+  .result-val.total {
+    font-size: 30px;
+    color: var(--bp-white);
+    text-shadow: 0 0 18px rgba(96,165,250,0.4);
+  }
+  .unit-label {
+    font-size: 13px;
+    color: var(--bp-muted);
+    margin-left: 3px;
+  }
+  .corner-tag {
+    position: absolute;
+    bottom: 8px; right: 10px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    color: var(--bp-accent);
+    opacity: 0.4;
+    letter-spacing: 0.1em;
+  }
+</style>
+
+<div id="calc-root" role="main" aria-label="3D printing cost calculator">
+  <div class="bp-header">
+    <div class="bp-logo" aria-hidden="true"><i class="ti ti-cube"></i></div>
+    <div class="bp-title">3D Print Calculator</div>
+    <div class="bp-subtitle">[ COST ESTIMATOR ]</div>
+  </div>
+
+  <div class="section-label">— Print parameters</div>
+  <div class="grid2">
+    <div class="field-block">
+      <div class="field-label">PRINT DURATION</div>
+      <div class="field-row">
+        <input class="bp-input" type="number" id="hours" min="0" value="0" style="width:60px;" aria-label="Hours">
+        <span class="field-unit">hr</span>
+        <input class="bp-input" type="number" id="minutes" min="0" max="59" value="0" style="width:60px;" aria-label="Minutes">
+        <span class="field-unit">min</span>
+      </div>
+    </div>
+    <div class="field-block">
+      <div class="field-label">FILAMENT WEIGHT</div>
+      <div class="field-row">
+        <input class="bp-input" type="number" id="weight" min="0" value="0" aria-label="Filament weight in grams">
+        <span class="field-unit">g</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="filament-section">
+    <div class="section-label">— Filament type</div>
+    <div class="fil-options">
+      <div class="fil-btn active" data-fil="esun" onclick="selectFil(this)" role="button" aria-pressed="true" tabindex="0">
+        <div class="fil-dot"></div>
+        <div class="fil-name">eSUN PLA+</div>
+        <div class="fil-price">86 TND / kg</div>
+      </div>
+      <div class="fil-btn" data-fil="creality" onclick="selectFil(this)" role="button" aria-pressed="false" tabindex="0">
+        <div class="fil-dot"></div>
+        <div class="fil-name">Creality PLA</div>
+        <div class="fil-price">70 TND / kg</div>
+      </div>
+      <div class="fil-btn" data-fil="own" onclick="selectFil(this)" role="button" aria-pressed="false" tabindex="0">
+        <div class="fil-dot"></div>
+        <div class="fil-name">I bring filament</div>
+        <div class="fil-price">—</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="section-label">— Estimate</div>
+  <div class="result-section">
+    <div class="result-row">
+      <span class="result-label">Printing time cost</span>
+      <span class="result-val" id="time-cost">0.00<span class="unit-label">TND</span></span>
+    </div>
+    <div class="result-row" id="filament-row">
+      <span class="result-label" id="fil-label">Filament cost (eSUN PLA+)</span>
+      <span class="result-val" id="fil-cost">0.00<span class="unit-label">TND</span></span>
+    </div>
+    <div class="result-row">
+      <span class="result-label">Total</span>
+      <span class="result-val total" id="total-cost">0.00<span class="unit-label" style="font-size:15px;">TND</span></span>
+    </div>
+    <div class="corner-tag">REV 1.0 // BP-CALC</div>
+  </div>
+</div>
+
+<script>
+  const RATE_PER_HOUR = 4.5;
+  const MARGIN = 1.5;
+  const FIL_PRICES = { esun: 86, creality: 70, own: 0 };
+  const FIL_NAMES = { esun: 'eSUN PLA+', creality: 'Creality PLA', own: 'Your filament' };
+  let currentFil = 'esun';
+
+  function selectFil(el) {
+    document.querySelectorAll('.fil-btn').forEach(b => {
+      b.classList.remove('active');
+      b.setAttribute('aria-pressed', 'false');
+    });
+    el.classList.add('active');
+    el.setAttribute('aria-pressed', 'true');
+    currentFil = el.dataset.fil;
+    const fr = document.getElementById('filament-row');
+    fr.style.display = currentFil === 'own' ? 'none' : 'flex';
+    document.getElementById('fil-label').textContent = 'Filament cost (' + FIL_NAMES[currentFil] + ')';
+    calculate();
+  }
+
+  function calculate() {
+    const h = parseFloat(document.getElementById('hours').value) || 0;
+    const m = parseFloat(document.getElementById('minutes').value) || 0;
+    const g = parseFloat(document.getElementById('weight').value) || 0;
+    const totalHours = h + m / 60;
+    const baseTimeCost = totalHours * RATE_PER_HOUR;
+    const timeCost = baseTimeCost * MARGIN;
+    let filCost = 0;
+    if (currentFil !== 'own') {
+      const pricePerGram = FIL_PRICES[currentFil] / 1000;
+      filCost = g * pricePerGram * MARGIN;
+    }
+    const total = timeCost + filCost;
+    document.getElementById('time-cost').innerHTML = timeCost.toFixed(2) + '<span class="unit-label">TND</span>';
+    document.getElementById('fil-cost').innerHTML = filCost.toFixed(2) + '<span class="unit-label">TND</span>';
+    document.getElementById('total-cost').innerHTML = total.toFixed(2) + '<span class="unit-label" style="font-size:15px;">TND</span>';
+  }
+
+  document.querySelectorAll('.bp-input').forEach(i => i.addEventListener('input', calculate));
+  document.querySelectorAll('.fil-btn').forEach(btn => {
+    btn.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectFil(btn); } });
+  });
+  calculate();
+</script>
